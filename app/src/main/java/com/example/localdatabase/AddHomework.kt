@@ -23,23 +23,24 @@ class AddHomework : AppCompatActivity() {
         binding = ActivityAddHomeworkBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        homeworkHelper = HomeworkHelper.getInstance(applicationContext)
+        // Menginisialisasi HomeworkHelper
+        homeworkHelper = HomeworkHelper.getInstance(applicationContext)!!
         homeworkHelper.open()
 
-        // Cek apakah ada data homework
+        // Cek apakah ada data homework yang diteruskan
         homework = intent.getParcelableExtra(EXTRA_HOMEWORK)
 
         if (homework != null) {
             position = intent.getIntExtra(EXTRA_POSITION, 0)
             isEdit = true
         } else {
-            homework = Homework()
+            homework = Homework()  // Membuat objek Homework baru jika tidak ada
         }
 
         val actionBarTitle: String
         val btnTitle: String
 
-        // Jika ada data pada homework berarti melakukan update
+        // Jika ada data homework berarti ini adalah mode edit
         if (isEdit) {
             actionBarTitle = "Ubah"
             btnTitle = "Update"
@@ -61,6 +62,7 @@ class AddHomework : AppCompatActivity() {
         binding.btnDelete.setOnClickListener { showAlertDialog(ALERT_DIALOG_DELETE) }
     }
 
+    // Fungsi untuk menambahkan atau mengubah data homework
     private fun addNewHomework() {
         val title = binding.edtTitle.text.toString().trim()
         val description = binding.edtDescription.text.toString().trim()
@@ -78,10 +80,11 @@ class AddHomework : AppCompatActivity() {
         intent.putExtra(EXTRA_POSITION, position)
 
         val values = ContentValues()
-        values.put(DatabaseContract.HomeworkColumns.TITLE, title)
-        values.put(DatabaseContract.HomeworkColumns.DESCRIPTION, description)
+        values.put(DatabaseContract.HomeworkColumns.TITLE, title)          // Menggunakan DatabaseContract.HomeworkColumns.TITLE
+        values.put(DatabaseContract.HomeworkColumns.DESCRIPTION, description)  // Menggunakan DatabaseContract.HomeworkColumns.DESCRIPTION
 
         if (isEdit) {
+            // Mengupdate data homework yang ada
             val result = homeworkHelper.update(homework?.id.toString(), values)
             if (result > 0) {
                 setResult(RESULT_UPDATE, intent)
@@ -90,8 +93,9 @@ class AddHomework : AppCompatActivity() {
                 Toast.makeText(this, "Gagal memperbarui data", Toast.LENGTH_SHORT).show()
             }
         } else {
+            // Menambahkan data homework baru
             homework?.date = getCurrentDate()
-            values.put(DatabaseContract.HomeworkColumns.DATE, homework?.date)
+            values.put(DatabaseContract.HomeworkColumns.DATE, homework?.date)  // Menggunakan DatabaseContract.HomeworkColumns.DATE
             val result = homeworkHelper.insert(values)
             if (result > 0) {
                 homework?.id = result.toInt()
@@ -110,8 +114,10 @@ class AddHomework : AppCompatActivity() {
 
     override fun onBackPressed() {
         showAlertDialog(ALERT_DIALOG_CLOSE)
+        super.onBackPressed()
     }
 
+    // Menampilkan dialog konfirmasi untuk batal atau hapus
     private fun showAlertDialog(type: Int) {
         val isDialogClose = type == ALERT_DIALOG_CLOSE
         val dialogTitle: String

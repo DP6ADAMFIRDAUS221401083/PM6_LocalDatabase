@@ -1,46 +1,45 @@
 package com.example.localdatabase
 
-class HoneworkAdapter (private val onitemClickCallback: OnItemClickCallback):
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.localdatabase.databinding.ItemHomeworkBinding
 
+class HomeworkAdapter(private val onItemClickCallback: OnItemClickCallback) :
     RecyclerView.Adapter<HomeworkAdapter.HomeworkViewHolder>() {
+
     var listHomework = ArrayList<Homework>()
-
-    set(listHomework) {
-
-        if (listHomework.size > 0) {
-            this.listHomework.clear()
-        }
-        this.listHomework.addAll(listHomework)
-
+        set(listHomework) {
+            if (listHomework.size > 0) {
+                this.listHomework.clear()
+            }
+            this.listHomework.addAll(listHomework)
+            notifyDataSetChanged()
         }
 
     interface OnItemClickCallback {
-
         fun onItemClicked(selectedHomework: Homework?, position: Int?)
     }
-    fun addItem(homework: Homework){
+
+    fun addItem(homework: Homework) {
         this.listHomework.add(homework)
         notifyItemInserted(this.listHomework.size - 1)
     }
+
     fun updateItem(position: Int, homework: Homework) {
-
-        this.listHomework [position] = honework
-
+        this.listHomework[position] = homework
         notifyItemChanged(position, homework)
-
     }
 
-    fun removeIten(position: Int) {
-
+    fun removeItem(position: Int) {
         this.listHomework.removeAt(position)
-
-        notifyItenRemoved (position)
-
-        notifyItemRangeChanged(position, this.ListHomework.size)
-
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, this.listHomework.size)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeworkViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_homework, parent, attachToRoot = false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_homework, parent, false)
         return HomeworkViewHolder(view)
     }
 
@@ -62,6 +61,4 @@ class HoneworkAdapter (private val onitemClickCallback: OnItemClickCallback):
             }
         }
     }
-
 }
-
