@@ -6,11 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.localdatabase"
-    compileSdk = 34
-
-    buildFeatures {
-        viewBinding = true
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.localdatabase"
@@ -22,6 +18,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,18 +31,18 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
 
 dependencies {
-
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -51,4 +51,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+// Tambahkan resolusi konflik jika diperlukan
+configurations.all {
+    resolutionStrategy {
+        force("androidx.core:core-ktx:1.15.0")
+        force("com.google.android.material:material:1.12.0")
+    }
 }
